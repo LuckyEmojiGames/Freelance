@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "prestart": "start /b \"C:/Program Files/MongoDB/Server/5.0/bin/mongod.exe\"",
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
@@ -30,7 +31,7 @@
     "express": "^4.18.1",
     "express-fileupload": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.13.3",
+    "mongoose": "^6.5.3",
     "morgan": "^1.10.0",
     "nodemailer": "^6.7.8",
     "razorpay": "^2.8.4",
