@@ -1,4 +1,6 @@
 const express = require("express");
+const tonService = require('./services/tonService');
+const apiRoutes = require('./routes/api'); 
 var morgan = require("morgan");
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -19,11 +21,33 @@ app.use(
     tempFileDir: "/tmp/",
   })
 );
+app.use('/api', apiRoutes);
+// API endpoint to get account details
+app.get('/api/account/:address', async (req, res) => {
+  const { address } = req.params;
+  try {
+      const accountDetails = await tonService.getAccountDetails(address);
+      res.json(accountDetails);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
+
+// API endpoint to send a transaction
+app.post('/api/transaction', async (req, res) => {
+  const { fromAddress, toAddress, amount } = req.body;
+  try {
+      const result = await tonService.sendTransaction(fromAddress, toAddress, amount);
+      res.json(result);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
 
 // morgan middleware
 app.use(morgan("tiny"));
 
-// import all routes here
+// import all routes
 const home = require("./routes/home");
 const user = require("./routes/user")
 const jobs = require("./routes/job");

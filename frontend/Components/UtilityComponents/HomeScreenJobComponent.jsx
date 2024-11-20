@@ -18,24 +18,20 @@ const HomeScreenJobComponent = ({
 
   return (
     <View key={jobId} style={styles.container}>
+      <LinearGradient colors={['black', '#020A18']}>
       <View style={styles.subContainer}>
         <Text style={styles.mainText}>{jobTitle}</Text>
-      </View>
-      <View style={styles.subContainer}>
-        <View>
-          <Text>₹ {jobBudget}</Text>
-          <Text style={{ color: "grey" }}>Budget</Text>
-        </View>
-        <View style={{ marginLeft: 150 }}>
-          <Text>Intermediate </Text>
-          <Text style={{ color: "grey" }}>Experience level</Text>
-        </View>
       </View>
       <Text numberOfLines={2} style={styles.descriptionText}>
         {jobDescription}
       </Text>
-
       <View style={styles.subContainer}>
+        <View>
+          <Text style={{color:"white"}}>${jobBudget}</Text>
+        </View>
+      </View>
+
+      {/* <View style={styles.subContainer}>
       {jobTags.map((item) => {
           return (
             <LinearGradient
@@ -51,7 +47,8 @@ const HomeScreenJobComponent = ({
             
           );
         })}
-      </View>
+      </View> */}
+      </LinearGradient>
     </View>
   );
 };
@@ -64,9 +61,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderWidth: 1,
     marginHorizontal: 10,
-    borderRadius: 30,
-    paddingHorizontal:10
-
+    borderRadius: 10,
+    paddingHorizontal:10,
+    backgroundColor: "black"
   },
   subContainer: {
     flexDirection: "row",
@@ -77,6 +74,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginRight: 15,
     fontSize: 14,
+    color: "white"
   },
   icon: {
     paddingHorizontal: 7,
@@ -100,6 +98,7 @@ const styles = StyleSheet.create({
   },
   descriptionText: {
     marginHorizontal: 10,
+    color: "white"
   },
   linearGradientbutton:{
     padding:5,

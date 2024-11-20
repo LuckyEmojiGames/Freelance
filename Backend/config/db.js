@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const connectDb = () => {
   mongoose
-    .connect(process.env.SKILLCOUP_DB_URL, {
+    .connect(process.env.EVO_DB_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })

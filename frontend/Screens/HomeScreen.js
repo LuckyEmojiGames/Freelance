@@ -34,7 +34,7 @@ const HomeScreen = () => {
 
     <View style={styles.mainContainer}>
       <LinearGradient
-        colors={["#FFFFFF", "#769ede"]}
+        colors={["#082148", "#020A18"]}
         style={styles.background}
       />
       {userType == "freelancer" && (<HomeComponent />)}

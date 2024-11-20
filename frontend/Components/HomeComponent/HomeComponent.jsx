@@ -50,7 +50,6 @@ const HomeComponent = () => {
     <ScrollView style={{}}>
       {!isZeroJobs && (
         <View style={{ marginTop: 30 }}>
-          <Text>Jobs For you</Text>
           {Jobs.map((item) => {
             return (
               <TouchableOpacity
