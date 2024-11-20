@@ -1,21 +1,89 @@
+# Evo React Native Application
 
-# SkillCoup React Native Application
+## Overview
+**Evo** is a modern freelancing marketplace that connects clients and freelancers seamlessly. The app allows clients to post detailed projects, and freelancers to submit proposals and receive secure payments through an escrow-like system.
 
-## Screens
- ![Skillcoup Mobile](https://user-images.githubusercontent.com/63795656/212247890-3f915445-6889-43a8-b7b5-b37670f4a709.png)
+## Features
+### For Clients
+- Post projects with specific requirements:
+  - Budget, delivery date, required skills, and category (e.g., software, design).
+- Review freelancer proposals and select the best fit.
+- Securely release payments upon project completion.
 
-## Overall Working
-- This is freelancing marketplace where
-    - Client can create projects according to their needs such as Budget, delivery date, skills,category of projects (software,design etc).
-    - Freelancers can choose from those projects and submit a proposal explaining their skillset and how they're right fit for the project and a quotation amount in which they're ready to proceed. 
-    - Whenever Client pays to freelancer it will be transferred to skillcoup's account and as soon as freelancer delivers the project and client marks for completion of the project funds will be transferred to freelancer's account.
- 
+### For Freelancers
+- Browse available projects and submit proposals.
+- Include quotations and highlight relevant skills in proposals.
+- Receive secure payments upon successful project delivery.
+
+### Payment Workflow
+- Funds are deposited securely into Evo's account.
+- Payments are released to freelancers only after client approval of project completion.
+
 ## Technologies Used
- - JavaScript
- - React Native
+- **Framework**: React Native with Expo
+- **Language**: JavaScript
+- **State Management**: React Navigation
+- **UI Libraries**:
+  - React Native Elements
+  - Lottie for animations
+  - React Native Linear Gradient
+- **API and Integrations**:
+  - Axios for API calls
+  - TON for payment handling
+- **Other Libraries**:
+  - AsyncStorage for local storage
+  - React Native Document Picker for file uploads
 
-## Authors
+## Prerequisites
+Before you begin, ensure you have the following installed on your system:
+- **Node.js**: Version `>=14.x` (recommended)
+- **npm** or **yarn**: Latest stable version
+- **Expo CLI**: Install using `npm install -g expo-cli`
+- **Android Studio** or **Xcode**: For running the app on emulators
 
-- [@atharvapanegai](https://www.github.com/atharvapanegai)
-- [@yashdikkar92](https://www.github.com/yashdikkar92)
+## Getting Started
+Follow these steps to set up the project locally:
 
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/LuckyEmojiGames/Freelance.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd evo-react-native
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+   or
+   ```bash
+   yarn install
+   ```
+4. Start the development server:
+   ```bash
+   expo start
+   ```
+5. Run the app:
+   - **Android**: Connect a device/emulator and select the option in Expo.
+   - **iOS**: Use a simulator or a connected device.
+   - **Web**: Start the web server with `npm run web`.
+
+## Project Structure
+- **`App.js`**: Main application entry point.
+- **`Components/`**: Reusable UI components.
+- **`Screens/`**: Individual screens for the app.
+- **`navigation/`**: Handles app navigation.
+- **`service/`**: API and backend integration logic.
+- **`assets/`**: Static files like images and icons.
+- **`Test/`**: Contains test scripts for components and features.
+
+## Scripts
+- `npm start`: Start the Expo development server.
+- `npm run android`: Build and run the app on an Android emulator or device.
+- `npm run ios`: Build and run the app on an iOS emulator or device.
+- `npm run web`: Start the web version of the app.
+
+
+## TroubleShooting
+reference https://github.com/expo/expo/issues/32955#issuecomment-2479691104
