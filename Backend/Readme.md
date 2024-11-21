@@ -55,7 +55,19 @@ Follow these steps to run the application in your local environment and contribu
    CLOUDINARY_API=your-cloudinary-api-key
    CLOUDINARY_SECRET=your-cloudinary-secret
    CLOUDINARY_NAME=your-cloudinary-name
-   ```
+   TONCENTER_API_URL=https://toncenter.com/api/v2/jsonRPC
+   TONCENTER_API_KEY=<your-toncenter-api-key>
+   TON_API_URL=https://tonapi.io
+   TON_API_KEY=<your-tonapi-io-api-key>
+   WALLET_ADDRESS=<your-wallet-address>
+   VAULT_ENDPOINT=<your-hashicorp-vault-endpoint>
+   VAULT_TOKEN=<your-hashicorp-vault-token>
+   VAULT_PATH=<your-hashicorp-vault-path>
+   API_URL=<your-endpoint> // Your endpoint URL for receiving transactions
+   CHECK_INTERVAL=10000 // Timer for checking the wallet
+   UPDATE_INTERVAL=2000 // Timer for syncing transactions with your server
+   LIMIT=500 // Number of transactions to fetch per wallet check
+   PORT=3000 // Port on which the application runs
 
 4. **Run the Application**:
 
