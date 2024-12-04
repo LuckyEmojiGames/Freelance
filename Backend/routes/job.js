@@ -10,7 +10,7 @@ const router = express.Router();
 router.route("/job/proposals").post(isLoggedIn,getJobBidsById)
 
 // client routes 
-router.route("/client/postjob").post(isLoggedIn,postJob); // to post a job
+router.route("/client/postjob").post(postJob); // to post a job
 router.route("/client/assignJob").post(isLoggedIn,assignProjectToFreelancer) // assign a job to freelancer
 router.route('/client/jobsPosted').get(isLoggedIn,getPostedJobs);
 router.route("/client/assignedJobs").get(isLoggedIn,getAssignedProjects)

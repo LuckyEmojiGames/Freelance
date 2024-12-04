@@ -2,8 +2,8 @@ const TonWeb = require('tonweb');
 const { HttpClient, Api } = require('tonapi-sdk-js');
 const fs = require('fs').promises;
 const axios = require('axios');
-const Transaction = require('../models/transaction');
-const api = require('../utils/api');
+// const Transaction = require('../models/transaction');
+// const api = require('../utils/api');
 const amqp = require('amqplib');
 require('dotenv').config();
 const vault = require('node-vault')({

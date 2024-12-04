@@ -11,52 +11,64 @@ const jobPostSchema = new Schema({
         required:true,
     }, 
     // posted,assigned,started,inprogress,completed
-    jobCategory:{
+    Resp:{
         type:String,
         required:true,
     },
-    jobBudget:{
+    Email:{
+        type:String,
+        required:true,
+    },
+    Telegram:{
+        type:String,
+        required:true,
+    },
+    Phone:{
         type:Number,
         required:true,
     },
-    jobTags:[
-        {
-            tagTitle:String,
-        }
-    ],
-    jobDescription:{
+    Info:{
         type:String,
         required:true,
     },
-    jobFileUrl:{
+    Requirement:{
         type:String,
+        required:true,
     },
-    Client:{
-        type:Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+    Condition:{
+        type:String,
+        required:true,
     },
-    freelancer : {
-        type:Schema.Types.ObjectId,
-        ref:"User",
-        required:false,
+    Note:{
+        type:String,
+        required:true,
     },
-    jobProposals:[
-        {
-            type:Schema.Types.ObjectId,
-            ref:"JobBid",
-        }
-    ],
-    proposalsSubmittedBy:[
-        {
-            type:Schema.Types.ObjectId,
-            ref:"User"
-        }
-    ],
-    createdAt: {
-        type: Date,
-        default: Date.now,
-      },
+    // Client:{
+    //     type:Schema.Types.ObjectId,
+    //     ref:"User",
+    //     required:true
+    // },
+    // freelancer : {
+    //     type:Schema.Types.ObjectId,
+    //     ref:"User",
+    //     required:false,
+    // },
+    // jobProposals:[
+    //     {
+    //         type:Schema.Types.ObjectId,
+    //         ref:"JobBid",
+    //     }
+    // ],
+    // proposalsSubmittedBy:[
+    //     {
+    //         type:Schema.Types.ObjectId,
+    //         ref:"User"
+    //     }
+    // ],
+    // createdAt: {
+    //     type: Date,
+    //     default: Date.now,
+    //   },
 });
 
 module.exports = mongoose.model("JobPost",jobPostSchema);

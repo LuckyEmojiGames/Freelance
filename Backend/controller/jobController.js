@@ -3,31 +3,31 @@ const CustomError = require("../utils/customError");
 const JobPost = require("../models/jobPostModel");
 const JobBid = require("../models/jobBidModel");
 
-exports.postJob = BigPromise(async (req, res, next) => {
+exports.postJob = async (req, res, next) => {
  
-    const { jobTitle, jobCategory, jobBudget, jobTags, jobDescription, jobFileUrl } = req.body;
+    const { jobTitle, Resp, Email, Telegram, Phone, Info, Requirement, Condition, Note } = req.body;
 
-    if (!jobTitle || !jobCategory || !jobBudget || !jobTags || !jobDescription) {
+    if (!jobTitle || !Resp || !Email || !Telegram || !Phone || !Info || !Requirement || !Condition || !Note) {
         return next(new CustomError("Fields are missing", 401));
     }
     const jobPosted = await JobPost.create({
         jobTitle,
         jobStatus:"posted",
-        jobCategory,
-        jobBudget,
-        jobTags,
-        jobDescription,
-        jobFileUrl,
-        Client:req.user._id
+        Resp,
+        Email,
+        Telegram,
+        Phone,
+        Info,
+        Requirement,
+        Condition,
+        Note
     })
-
-
 
     res.status(200).json({
         success:true,
         job : jobPosted
     })
-});
+};
 
 // get all jobs for home page
 exports.getAllJobs = BigPromise(async (req, res, next) => {
