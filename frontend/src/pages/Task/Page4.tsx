@@ -42,10 +42,10 @@ const Page4 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
         setIsModalOpen(false); // Close the modal
 
         try {
-            const response = await fetch('/api/tasks', {
+            const response = await fetch('http://localhost:4000/api/v1/client/task', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...taskData, enhancement: selectedEnhancement }),
+                body: JSON.stringify({ ...taskData}),
             });
             if (response.ok) {
                 alert('Task submitted successfully!');
@@ -115,18 +115,20 @@ const Page4 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
             {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white rounded-lg p-6 w-11/12 md:w-1/3">
-                        <h2 className="text-lg font-bold mb-4">Создание задания не завершено</h2>
-                        <p className="mb-4">При выходе из этой формы все данные будут потеряны. Покинуть форму без сохранения данных?</p>
-                        <div className="flex justify-end">
+                    <div className="bg-[#FFFFFFE5] rounded-lg p-6 w-10/12 md:w-1/3 ">
+                        <h2 className="text-lg font-bold mb-2 text-center">Создание задания не завершено</h2>
+                        <p className="text-center">При выходе из этой формы все</p>
+                        <p className='text-center'>данные будут потеряны. Покинуть</p>
+                        <p className='text-center'>форму без сохранения данных?</p>
+                        <div className="mt-3 flex justify-between">
                             <button
-                                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
+                                className="bg-white w-full text-gray-800 px-4 py-2 rounded-lg mr-2 text-blue-600"
                                 onClick={() => setIsModalOpen(false)}
                             >
                                 Отмена
                             </button>
                             <button
-                                className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                                className="bg-white w-full text-white px-4 py-2 rounded-lg text-blue-600"
                                 onClick={confirmSubmission}
                             >
                                 Ок

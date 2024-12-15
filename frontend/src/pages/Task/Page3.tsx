@@ -1,14 +1,27 @@
-import React, { useContext, useState } from 'react';
-import { TaskContext } from '../../components/contexts/TaskContext';
+import React, { useContext, useState } from "react";
+import { TaskContext } from "../../components/contexts/TaskContext";
 
-const Page3 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetStateAction<number>> }) => {
+const Page3 = ({
+  setCurrentPage,
+}: {
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+}) => {
   const { taskData, updateTaskData } = useContext(TaskContext)!;
-  const [description, setDescription] = useState(taskData.description || '');
+  const [description, setDescription] = useState(taskData.description || "");
+  const [showDatePicker, setShowDatePicker] = useState(false); // Toggle for date picker
+  const [deadline, setDeadline] = useState(taskData.deadline || ""); // Local state for deadline
 
   const handleFileAttach = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       updateTaskData({ file: event.target.files[0] });
     }
+  };
+
+  const handleDeadlineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = event.target.value;
+    setDeadline(selectedDate);
+    updateTaskData({ deadline: selectedDate }); // Update context
+    setShowDatePicker(false); // Hide date picker after selection
   };
 
   return (
@@ -18,12 +31,11 @@ const Page3 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
           <h1 className="text-white font-bold text-2xl">Создание задания</h1>
         </div>
         <div className="flex justify-center">
-            <p className="text-gray-600 text-xl ">Вернуться назад</p>
+          <p className="text-gray-600 text-xl">Вернуться назад</p>
         </div>
       </nav>
 
       <div className="px-4 mt-10">
-
         {/* Description Input */}
         <textarea
           placeholder="Опишите задание"
@@ -44,7 +56,7 @@ const Page3 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
           <input
             type="file"
             id="fileInput"
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             onChange={handleFileAttach}
           />
         </div>
@@ -57,20 +69,36 @@ const Page3 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
               {taskData.price || "0"} {taskData.currency || ""}
             </p>
           </div>
-          <img src="/images/white_line.png" className="w-full mt-1"/>
+          <img src="/images/white_line.png" className="w-full mt-1" />
           <div className="flex items-center justify-between mt-2">
             <p className="text-white font-bold">Выполнить до</p>
-            <div className='flex justify-between items-center'>
-                <div className='flex justify-center items-center'>
-                    <p className="text-gray-300">{taskData.deadline || "Не указано"}</p>
-                </div>
-                <div className='flex justify-center items-center ml-1'>
-                    <img src='/images/add.png' />
-                </div>
+            <div className="flex justify-between items-center">
+              <div className="flex justify-center items-center">
+                <p className="text-gray-300">{deadline || "Не указано"}</p>
+              </div>
+              <div className="flex justify-center items-center ml-1">
+                <img
+                  src="/images/add.png"
+                  alt="Add deadline"
+                  className="cursor-pointer"
+                  onClick={() => setShowDatePicker(true)} // Show date picker on click
+                />
+              </div>
             </div>
           </div>
         </div>
-        
+
+        {/* Date Picker (conditionally displayed) */}
+        {showDatePicker && (
+          <div className="bg-[#0B1B35] mt-3 p-3 rounded-lg">
+            <input
+              type="date"
+              className="w-full bg-[#1A2B50] text-white p-2 rounded-lg"
+              onChange={handleDeadlineChange}
+            />
+          </div>
+        )}
+
         {/* Navigation Buttons */}
         <div className="flex mt-8">
           <button
@@ -82,7 +110,7 @@ const Page3 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
           <button
             className="w-1/2 rounded-lg bg-blue-600 m-1 text-white h-12"
             onClick={() => {
-              updateTaskData({ description });
+              updateTaskData({ description, deadline });
               setCurrentPage(4); // Navigate to Page 4
             }}
           >

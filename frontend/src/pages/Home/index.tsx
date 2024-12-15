@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Cad from "./cad";
 import { useNavigate } from "react-router-dom";
 import OngoingTask from "./ongoing";
@@ -6,10 +7,40 @@ import OngoingTask from "./ongoing";
 const Home = () => {
   const [currentTab, setCurrentTab] = useState("");
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [tasks, setTasks] = useState<any[]>([]); // Ensure tasks is always an array
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
+  const [isZeroJobs, setIsZeroJobs] = useState(false);
 
   useEffect(() => {
     setCurrentTab(currentTab);
-  }, []);
+
+    // Fetch tasks only when the active tab is "New" (index 0)
+    if (activeIndex === 0) {
+      fetchTasks();
+    }
+  }, [activeIndex]);
+
+  const fetchTasks = async () => {
+    setLoading(true);
+    setError(null); // Clear any previous errors
+    try {
+      const res = await axios.get(`http://localhost:4000/api/v1/freelancer/getAllTasks`);
+      console.log("Fetched data:", res.data.jobs);
+
+      if (res.data.jobs.length === 0) {
+        setIsZeroJobs(true);
+      } else {
+        setIsZeroJobs(false);
+      }
+      setTasks(res.data.jobs);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch tasks. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleButtonClick = (index: number) => {
     setActiveIndex(index);
@@ -22,6 +53,10 @@ const Home = () => {
     navigate(path);
   };
 
+  const handleTaskClick = (task: any) => {
+    navigate("/abouttask", { state: { task } });
+  };
+
   return (
     <main className="relative pt-24 pb-24 w-full bg-cover bg-center bg-no-repeat min-h-full bg-[url('/images/background/background.png')] bg-cover bg-[#5200FF64]">
       <nav className="fixed pt-5 pb-5 w-full bg-cover bg-center bg-no-repeat top-0 left-0 right-0 bg-[url('/images/background/header_bg.png')] rounded-b-3xl">
@@ -29,7 +64,7 @@ const Home = () => {
         <div className="flex justify-center items-center mt-3">
           <div className="ml-[30px]">
             <img src="/images/alert.png" />
-          </div>  
+          </div>
           <div className="flex justify-center h-10 bg-[#1a1f36] rounded-[10px] overflow-hidden w-fit mx-auto border-dark-blue border-[1px]">
             <button
               className={`px-5 py-2 text-white text-[13px] transition-all duration-300 ${
@@ -70,28 +105,29 @@ const Home = () => {
 
       {/* Tab Content */}
       <div className="flex flex-col px-4">
-        <div className="text-sm text-[#ffffffc0] font-semibold mt-10 ">
+        <div className="text-sm text-[#ffffffc0] font-semibold mt-10">
           {activeIndex === 0 && (
             <div className="items-center">
-                <Cad
-                  title="Перевести на английский договор"
-                  description="на разработку ПО на английский язык, сделать двуязычную версию договора, чтобы слева был русский, справа — анг..."
-                  reward={1500}
-                  timeLeft="1д 3ч"
-                />
-                <Cad
-                  title="Разработка дизайна логотипа и этике"
-                  description="Разработка дизайна логотипа и этикетки. Разработка дизайна логотипа и этикетки. Несколько вариантов на выбор. Формат фотошоп и корел."
-                  reward={1000}
-                  timeLeft="5ч"
-                />
-                <Cad
-                  title="Создание сайта-визитки"
-                  description="Разработка простой одностраничной визитки с информацией о компании. Адаптивный дизайн, включающий контакты, краткое описание услуг и карту местоположения."
-                  reward={1000}
-                  timeLeft="10ч"
-                />
-              </div>
+              {loading ? (
+                <p className="text-center text-white">Loading...</p>
+              ) : error ? (
+                <p className="text-center text-red-500">{error}</p>
+              ) : isZeroJobs ? (
+                <p className="text-center text-white">No tasks available</p>
+              ) : (
+                tasks.map((task, index) => (
+                  <div key={index} onClick={() => handleTaskClick(task)}>
+                    <Cad
+                      key={index}
+                      title={task.description || "No Title"}
+                      description={task.description || "No Description"}
+                      reward={task.price || 0}
+                      timeLeft={task.deadline || "None"} // Adjust to show meaningful values
+                    />
+                  </div>
+                ))
+              )}
+            </div>
           )}
           {activeIndex === 1 && (
             <div className="items-center">

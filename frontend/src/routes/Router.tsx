@@ -18,7 +18,7 @@ import Prices from "../pages/Prices";
 import Profile from "../pages/Profile";
 import Jalopa from "../pages/Jalopa";
 import Task from "../pages/Task";
-// import Chat from "../pages/Chat";
+import AboutTask from "../pages/AboutTask";
 
 const getRouteElementPublic = (
   Component: React.ElementType
@@ -48,7 +48,7 @@ const routes: RouteObject[] = [
   { path: "/profile", element: getRouteElementPublic(Profile) },
   { path: "/jalopa", element: getRouteElementPublic(Jalopa) },
   { path: "/task", element: getRouteElementPublic(Task) },
-  // { path: "/chat", element: getRouteElementPublic(Chat) },
+  { path: "/aboutTask", element: getRouteElementPublic(AboutTask) },
 ];
 
 const Router = createBrowserRouter(routes);
