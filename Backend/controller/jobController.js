@@ -43,24 +43,37 @@ exports.getAllJobs = BigPromise(async (req, res, next) => {
 })
 
 exports.Task = async (req, res, next) => {
- 
-    const { description, file, price, currency, deadline } = req.body;
+    const { description, file, price, currency, deadline, telegramUser } = req.body;
 
-    if (!description || !price || !currency || !file || !deadline) {
+    // Validate required fields
+    if (!description || !price || !currency || !file || !deadline || !telegramUser) {
         return next(new CustomError("Fields are missing", 401));
     }
-    const taskPosted = await Task.create({
-        description,
-        file,
-        price,
-        currency,
-        deadline
-    })
 
-    res.status(200).json({
-        success:true,
-        task : taskPosted
-    })
+    // Validate Telegram user info
+    if (!telegramUser.id || !telegramUser.first_name) {
+        return next(new CustomError("Telegram user info is incomplete", 401));
+    }
+
+    // Create task with Telegram user info
+    try {
+        const taskPosted = await Task.create({
+            description,
+            file,
+            price,
+            currency,
+            deadline,
+            telegramUser, // Save Telegram user info
+        });
+
+        res.status(200).json({
+            success: true,
+            task: taskPosted,
+        });
+    } catch (error) {
+        console.error("Error creating task:", error);
+        return next(new CustomError("Failed to create task", 500));
+    }
 };
 
 // get all tasks for home page

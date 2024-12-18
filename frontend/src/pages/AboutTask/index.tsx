@@ -1,5 +1,4 @@
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const About = () => {
   const location = useLocation();
@@ -11,8 +10,23 @@ const About = () => {
   }
 
   const handleClientClick = () => {
-    navigate("/chat", { state: { clientId: task.clientId, freelancerId: task.freelancerId } });
-  };
+    const telegramUser = window.Telegram.WebApp.initDataUnsafe?.user;
+
+    if (!telegramUser) {
+        alert("Telegram user info is missing. Please reopen the app through Telegram.");
+        return;
+    }
+
+    // Navigate to the chat page with Telegram user information
+    navigate("/chat", {
+        state: {
+            clientUsername: telegramUser.username, // Pass the client's Telegram username
+            clientFirstName: telegramUser.first_name, // Optional: Pass first name
+            clientLastName: telegramUser.last_name,  // Optional: Pass last name
+        },
+    });
+};
+
   return (
     <main className="relative pt-24 pb-24 w-full bg-cover bg-center bg-no-repeat min-h-full bg-[url('/images/background/background.png')] bg-cover bg-[#5200FF64]">
       <nav className="fixed pt-8 pb-8 w-full bg-cover bg-center bg-no-repeat top-0 left-0 right-0 bg-[url('/images/background/header_bg.png')] rounded-b-3xl">
@@ -58,7 +72,7 @@ const About = () => {
           </div>
         </div>
         <div className="flex justify-center mt-3">
-          <button className="rounded-lg bg-[#0B1B35] font-bold p-3 text-white text-[15px] w-1/2 mr-2">
+          <button className="rounded-lg bg-[#0B1B35] font-bold p-3 text-white text-[15px] w-1/2 mr-2" onClick={handleClientClick}>
             <p>О заказчике</p>
           </button>
           <button className="rounded-lg bg-[#9B2D2D] font-bold p-3 text-white text-[15px] w-1/2">

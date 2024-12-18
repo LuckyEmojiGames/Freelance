@@ -25,7 +25,7 @@ const Agent: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [inputValue, setInputValue] = useState<string>("");
   const [address, setAddress] = useState<string | null>(null);
-  const [isConnected, setIsConnected] = useState<boolean>(false);
+  // const [isConnected, setIsConnected] = useState<boolean>(false);
   const [tonBalance, setTonBalance] = useState<number>(0);
   const [usdtBalance, setUsdtBalance] = useState<number>(0);
   const [amount, setAmount] = useState<string>("");
@@ -38,13 +38,14 @@ const Agent: React.FC = () => {
 
   // Restore wallet connection and subscribe to status changes
   useEffect(() => {
+    setToAddress;
     tonConnect.restoreConnection();
     tonConnect.onStatusChange((wallet) => {
       if (wallet) {
-        setIsConnected(true);
+        // setIsConnected(true);
         setAddress(wallet.account.address);
       } else {
-        setIsConnected(false);
+        // setIsConnected(false);
         setAddress(null);
       }
     });
@@ -74,20 +75,38 @@ const Agent: React.FC = () => {
 
   const fetchUsdtBalance = async (walletAddress: string): Promise<void> => {
     try {
-      // Placeholder token address (replace with actual USDT contract address)
-      const usdtTokenAddress = "PLACEHOLDER_USDT_CONTRACT_ADDRESS";
-
-      const response = await tonConnect.call({
-        method: "getTokenBalance",
-        params: { address: walletAddress, token: usdtTokenAddress },
+      // Replace this with the actual USDT Jetton contract address for TON
+      const usdtJettonAddress = "EQDez1pR4uhEMkK4c9a0EZJQpujBhoGdN2kRCh5vA2O1YsRW"; // Example address
+  
+      const endpoint = `https://tonapi.io/v1/jettons/getBalances?account=${walletAddress}`;
+      const response = await fetch(endpoint, {
+        headers: {
+          Authorization: `Bearer YOUR_TONAPI_KEY`, // Use your TonAPI key
+        },
       });
-      const balance = response.result / 1e6; // Adjust for USDT decimals
-      setUsdtBalance(balance);
+  
+      const data = await response.json();
+  
+      if (data.balances && Array.isArray(data.balances)) {
+        const usdtBalanceEntry = data.balances.find(
+          (jetton: any) => jetton.jetton_address === usdtJettonAddress
+        );
+  
+        if (usdtBalanceEntry) {
+          setUsdtBalance(parseFloat(usdtBalanceEntry.balance) / 1e9); // USDT uses 9 decimals
+        } else {
+          setUsdtBalance(0); // No USDT balance found
+        }
+      } else {
+        console.error("Invalid response for USDT balance:", data);
+        setUsdtBalance(0);
+      }
     } catch (error) {
       console.error("Error fetching USDT balance:", error);
+      setUsdtBalance(0); // Fallback to zero balance in case of errors
     }
   };
-
+  
   // Handle tab switching
   const handleTabChange = useCallback((index: number): void => {
     setActiveIndex(index);
@@ -212,7 +231,10 @@ const Agent: React.FC = () => {
             </div>
             {address && (
             <div className="">
-              <TonCard ton_amount={tonBalance.toFixed(2)} usdt_amount={usdtBalance.toFixed(2)} />
+              <TonCard
+                ton_amount={parseFloat(tonBalance.toFixed(2))}
+                usdt_amount={parseFloat(usdtBalance.toFixed(2))}
+              />
               <div className="flex bg-cover bg-center bg-no-repeat bg-[#0B1B35] h-full p-4 rounded-lg shadow-md mb-3 w-full mt-3 items-center">
                 <div>
                   <p className="text-white">Укажите сумму пополнения</p>
@@ -249,7 +271,7 @@ const Agent: React.FC = () => {
                   <img src="/images/wallet.png" />
                 </div>
                 <p className="text-white text-center items-center ml-2">
-                  <span className="text-gray-400 text-[12px] truncate">{hexToBase64(address)}</span>
+                  <span className="text-gray-400 text-[10px] truncate">{address}</span>
                 </p>
               </div>
               {wallet ? (
@@ -272,7 +294,10 @@ const Agent: React.FC = () => {
         )}
         {currentTab === "Вывести" && (
           <div className="items-center">
-          <TonCard ton_amount={tonBalance.toFixed(2)} usdt_amount={usdtBalance.toFixed(2)} />
+          <TonCard
+            ton_amount={parseFloat(tonBalance.toFixed(2))}
+            usdt_amount={parseFloat(usdtBalance.toFixed(2))}
+          />
           <div className="flex bg-cover bg-center bg-no-repeat bg-dark-blue h-full p-4 rounded-lg shadow-md mb-3 w-full mt-3 items-center">
             <div>
               <p className="text-white">Укажите сумму вывода</p>

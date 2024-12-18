@@ -1,0 +1,11 @@
+# config.yaml
+telegram:
+  bot_token: "7726947452:AAGy5YJYI1J-A008-dSoJDGOF-3fu31exos"
+  webhook_url: "https://telegram-mini-app-frontend-two.vercel.app/"
+  allowed_user_ids:
+    - 123456789
+    - 987654321
+
+chat:
+  max_message_length: 500
+  enable_typing_indicator: false

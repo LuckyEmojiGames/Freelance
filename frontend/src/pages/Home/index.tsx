@@ -158,7 +158,7 @@ const Home = () => {
               </div>
           )}
           {activeIndex === 2 && (
-            <div className="flex justify-center items-center">
+            <div className="items-center">
               <div>
                 <OngoingTask
                   imageSrc="/images/avatars/avatar1.png"

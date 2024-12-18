@@ -1,11 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { TaskContext } from '../../components/contexts/TaskContext';
 
 const Page4 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetStateAction<number>> }) => {
-    const { taskData, updateTaskData } = useContext(TaskContext)!;
+    const { taskData } = useContext(TaskContext)!;
     const [selectedEnhancement, setSelectedEnhancement] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [telegramUser, setTelegramUser] = useState<any | null>(null); // Telegram user info state
 
+    // Enhancements data
     const enhancements = [
         {
             id: 'pinTop',
@@ -30,11 +32,34 @@ const Page4 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
         },
     ];
 
+    // Telegram WebApp Initialization
+    useEffect(() => {
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            try {
+                const user = tg.initDataUnsafe?.user;
+                if (user) {
+                    setTelegramUser(user);
+                } else {
+                    alert('Telegram user information is missing. Please open this app inside Telegram.');
+                }
+            } catch (error) {
+                console.error('Error initializing Telegram WebApp:', error);
+            }
+        } else {
+            alert('Telegram WebApp is not available. Make sure to open this app inside Telegram.');
+        }
+    }, []);
+
     const handleEnhancementSelect = (enhancementId: string) => {
         setSelectedEnhancement(enhancementId === selectedEnhancement ? null : enhancementId);
     };
 
     const handleSubmit = async () => {
+        if (!telegramUser) {
+            alert('Please open the app through Telegram to proceed.');
+            return;
+        }
         setIsModalOpen(true); // Open the modal
     };
 
@@ -42,11 +67,28 @@ const Page4 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
         setIsModalOpen(false); // Close the modal
 
         try {
+            if (!telegramUser) {
+                alert('Telegram user info is required to submit the task.');
+                return;
+            }
+
+            const requestData = {
+                ...taskData,
+                telegramUser: {
+                    id: telegramUser.id,
+                    first_name: telegramUser.first_name,
+                    last_name: telegramUser.last_name || '',
+                    username: telegramUser.username || '',
+                    language_code: telegramUser.language_code || '',
+                },
+            };
+
             const response = await fetch('http://localhost:4000/api/v1/client/task', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...taskData}),
+                body: JSON.stringify(requestData),
             });
+
             if (response.ok) {
                 alert('Task submitted successfully!');
                 setCurrentPage(1); // Reset to Page 1
@@ -74,22 +116,33 @@ const Page4 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
                 {enhancements.map((enhancement) => (
                     <div
                         key={enhancement.id}
-                        className={`bg-[#0066FF] mt-3 p-3 rounded-lg flex justify-center cursor-pointer transition-all duration-200 ${
+                        className={`bg-[#0066FF] mt-3 p-3 rounded-lg flex justify-between items-end cursor-pointer transition-all duration-200 ${
                             selectedEnhancement === enhancement.id ? 'ring-4 ring-white' : ''
                         }`}
                         onClick={() => handleEnhancementSelect(enhancement.id)}
                     >
-                        <div className="w-1/6 ml-1">
-                            <img src={enhancement.image} alt={enhancement.title} />
+                        <div className="flex items-center">
+                            <div className="w-12 h-12 mr-4">
+                                <img src={enhancement.image} alt={enhancement.title} />
+                            </div>
+                            <div>
+                                <p className="text-white font-bold">{enhancement.title}</p>
+                                {enhancement.description.map((line, index) => (
+                                    <p key={index} className="text-[#FFFFFF80] text-sm">
+                                        {line}
+                                    </p>
+                                ))}
+                                <p className="text-white font-bold mt-1">Стоимость: {enhancement.cost}</p>
+                            </div>
                         </div>
-                        <div className='w-5/6'>
-                            <p className="text-white font-bold">{enhancement.title}</p>
-                            {enhancement.description.map((line, index) => (
-                                <p key={index} className="text-[#FFFFFF80]">
-                                    {line}
-                                </p>
-                            ))}
-                            <p className="text-white font-bold">Стоимость: {enhancement.cost}</p>
+                        <div>
+                            <input
+                                type="radio"
+                                name="enhancement"
+                                checked={selectedEnhancement === enhancement.id}
+                                onChange={() => handleEnhancementSelect(enhancement.id)}
+                                className="w-6 h-6"
+                            />
                         </div>
                     </div>
                 ))}
@@ -98,14 +151,14 @@ const Page4 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
                 <div className="flex mt-8">
                     <button
                         className="w-1/2 rounded-lg bg-white m-1 text-blue-600 h-12"
-                        onClick={() => setCurrentPage(3)} // Navigate back to Page 3
+                        onClick={() => setCurrentPage(3)}
                     >
                         Назад
                     </button>
                     <button
                         className="w-1/2 rounded-lg bg-blue-600 m-1 text-white h-12"
-                        onClick={handleSubmit} // Open modal
-                        disabled={!selectedEnhancement} // Disable if no selection
+                        onClick={handleSubmit}
+                        disabled={!selectedEnhancement}
                     >
                         Продолжить
                     </button>
@@ -115,11 +168,9 @@ const Page4 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
             {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-[#FFFFFFE5] rounded-lg p-6 w-10/12 md:w-1/3 ">
+                    <div className="bg-[#FFFFFFE5] rounded-lg p-6 w-10/12 md:w-1/3">
                         <h2 className="text-lg font-bold mb-2 text-center">Создание задания не завершено</h2>
-                        <p className="text-center">При выходе из этой формы все</p>
-                        <p className='text-center'>данные будут потеряны. Покинуть</p>
-                        <p className='text-center'>форму без сохранения данных?</p>
+                        <p className="text-center">При выходе из этой формы все данные будут потеряны.</p>
                         <div className="mt-3 flex justify-between">
                             <button
                                 className="bg-white w-full text-gray-800 px-4 py-2 rounded-lg mr-2 text-blue-600"
@@ -128,10 +179,10 @@ const Page4 = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<React.SetSta
                                 Отмена
                             </button>
                             <button
-                                className="bg-white w-full text-white px-4 py-2 rounded-lg text-blue-600"
+                                className="bg-white w-full text-gray-800 px-4 py-2 rounded-lg text-blue-600"
                                 onClick={confirmSubmission}
                             >
-                                Ок
+                                OK
                             </button>
                         </div>
                     </div>

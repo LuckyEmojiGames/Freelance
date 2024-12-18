@@ -18,7 +18,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ imageSrc, title, reward, author }) 
       {/* Text Content */}
       <div className="flex-1">
         <h2 className="font-semibold truncate">{title}</h2>
-        <img className="mb-3 mt-3" src="/images/white_line.png" />
+        <img className="mb-3 mt-3 w-full" src="/images/white_line.png" />
         <div className="flex justify-between items-center text-sm mt-1 text-[#b0b3c1]">
           <div className="flex items-center">
             <img
