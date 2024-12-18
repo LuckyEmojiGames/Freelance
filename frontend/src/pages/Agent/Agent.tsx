@@ -10,15 +10,6 @@ type TabName = "Пополнить" | "Вывести" | "История" | "С�
 
 const TAB_NAMES: TabName[] = ["Пополнить", "Вывести", "История", "Статистика"];
 
-function hexToBase64(hex: string): string {
-  const byteArray = new Uint8Array(hex.match(/.{2}/g)?.map(byte => parseInt(byte, 16)) || []);
-  let binaryString = "";
-  byteArray.forEach(byte => {
-    binaryString += String.fromCharCode(byte);
-  });
-  return btoa(binaryString); // Base64 encoded string
-}
-
 const Agent: React.FC = () => {
   // State declarations
   const [currentTab, setCurrentTab] = useState<TabName>("Пополнить");
